@@ -74,7 +74,7 @@
 
 <p>然后npm命令替换为cnpm就可以愉快的安装npm包了~</p>
 <h2 id="本地搭建"><a href="#本地搭建" class="headerlink" title="本地搭建"></a>本地搭建</h2><p>更为详细的命令，例如开启debug调试、指定端口等等，请查看<a href="https://hexo.io/zh-cn/" target="_blank" rel="noopener">Hexo官网</a>的<a href="https://hexo.io/zh-cn/docs/" target="_blank" rel="noopener">文档</a>。运行以下命令，在浏览器输入<a href="http://localhost:4000" target="_blank" rel="noopener">http://localhost:4000</a>即可查看到自己的博客。</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">npm install hexo-cli -g</span><br><span class="line">hexo init blog</span><br><span class="line">cd blog</span><br><span class="line">npm install</span><br><span class="line">hexo server</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">npm install hexo-cli -g</span><br><span class="line">hexo init blog</span><br><span class="line">cd blog</span><br><span class="line">npm install</span><br><span class="line">hexo s --debug --port 4000</span><br></pre></td></tr></table></figure>
 
 <p>如果想加更多的博客文章，使用以下命令，然后在source目录的_posts文件夹下找到新添加的文章md文件编辑它，然后再次 hexo s 在本地进行预览：</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">hexo new &quot;postName&quot;</span><br></pre></td></tr></table></figure>
