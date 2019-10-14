@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html>
+  <head><meta name="generator" content="Hexo 3.9.0">
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    
+    <meta name="Subtitle" content="sharing, open source, interesting">
+    <meta name="Description" content="record the history of the academic qualifications, the interesting things and the sentiments of life">
+    <meta name="Keywords" content="c++,Qt,opengl,opencv">
+    <meta name="Author" content="umatobu">
+
+    <title>umatobu&#39;s blog</title>
+    <link rel="icon" type="image/png" href="/icon/favicon.png" sizes="32x32">
+    <link rel="stylesheet" href="/css/style.css">
+    <script src="/scripts/tabswitch.js"></script>
+</head>
+  <body>
+    <div class="wrap">
+      <header>
+  <a href="/" class="logo-link"><img src="/icon/header_logo.png" alt="icon"></a>
+  <ul class="nav nav-list">
+    
+      <li class="nav-list-item">
+        <a href="/" target="_self" class="nav-list-link ">HOME</a>
+      </li>
+    
+      <li class="nav-list-item">
+        <a href="/archives" target="_self" class="nav-list-link ">ARCHIVES</a>
+      </li>
+    
+      <li class="nav-list-item">
+        <a href="/aboutme" target="_self" class="nav-list-link ">ABOUTME</a>
+      </li>
+    
+  </ul>
+</header>
+      <main class="container">
+
+  
+  
+
+  
+  
+
+  
+  
+
+
+  <div class="post">
+    <article class="post-block">
+      <h1 class="post-title">hexo-theme-umatobu主题养成</h1>
+      <div class="post-info">2018-06-15</div>
+      <div class="post-content">
+        <p>　　看过《使用Hexo框架搭建GitHub博客》想必你已经熟练的使用Hexo现成的主题搭建了博客！不过你挑来挑去也没遇到心仪的主题怎么办呢？你只要掌握一点点Html、css和js，甚至不需要懂得各种模板引擎，看完本篇相信你就能慢慢写出或者魔改别人的主题然后做出符合自己标准的主题。</p>
+<a id="more"></a>
+
+<div class="tip">
+本文不再详细讲解Html、css和js的基础语法，Hexo的文档也是挑着用到的说，用不到的希望读者自己去研究和查找
+</div>
+
+<h3 id="从零开始制作-Hexo-主题"><a href="#从零开始制作-Hexo-主题" class="headerlink" title="从零开始制作 Hexo 主题"></a>从零开始制作 Hexo 主题</h3><p>为避免重复造轮子（手动狗头.jpg），这里贴出 <a href="https://www.zhihu.com/people/ahonn/activities" target="_blank" rel="noopener">Ahonn</a> 在知乎上的教程<a href="https://zhuanlan.zhihu.com/p/24763104" target="_blank" rel="noopener">《从零开始制作 Hexo 主题》</a>，此教程必看，文章详细的讲解了主题的制作过程，并且用到的 hexo 项目预装了的 render 插件 ejs 和 stylus 也是非常的简单且容易上手。</p>
+<h3 id="魔改-apollo-主题"><a href="#魔改-apollo-主题" class="headerlink" title="魔改 apollo 主题"></a>魔改 apollo 主题</h3><p>从零制作一个好看的主题对我来说是比较困难的，因为我主业也不是做web的，对我来说难度较高。在对 Hexo 官网贴出的 <a href="https://hexo.io/themes" target="_blank" rel="noopener">主题</a> 进行挑选之后，我选中了极简主题 <a href="https://github.com/pinggod/hexo-theme-apollo" target="_blank" rel="noopener">hexo-theme-apollo</a>，这个主题比较简单比较简洁符合我的审美，接下来我讲一下我魔改这个主题的思路和过程。</p>
+<p>首先我们看到主题 <a href="https://github.com/pinggod/hexo-theme-apollo" target="_blank" rel="noopener">hexo-theme-apollo</a>其实模板引擎用的是 jade ，CSS 预处理器用的是 scss，如果我们魔改的时候也用这两个东西的话无意增加了大量的学习成本（jade模板引擎语法相对学习成本比较大）。而预装的 ejs 模板引擎就非常的简单更容易理解，我贴出两段示例我们来看下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">&lt;header&gt;</span><br><span class="line">  &lt;a href=&quot;/&quot; class=&quot;logo-link&quot;&gt;&lt;img src=&quot;&lt;%- url_for(theme.icon.header_logo) %&gt;&quot; alt=&quot;icon&quot;&gt;&lt;/a&gt;</span><br><span class="line">  &lt;ul class=&quot;nav nav-list&quot;&gt;</span><br><span class="line">    &lt;% for (name in theme.menu) &#123; %&gt;</span><br><span class="line">      &lt;li class=&quot;nav-list-item&quot;&gt;</span><br><span class="line">        &lt;a href=&quot;&lt;%- url_for(theme.menu[name]) %&gt;&quot; target=&quot;_self&quot; class=&quot;nav-list-link &lt;%= is_current(theme.menu[name]) ? &apos;active&apos; : &apos;&apos; %&gt;&quot;&gt;&lt;%= name %&gt;&lt;/a&gt;</span><br><span class="line">      &lt;/li&gt;</span><br><span class="line">    &lt;% &#125; %&gt;</span><br><span class="line">  &lt;/ul&gt;</span><br><span class="line">&lt;/header&gt;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">&lt;div id=&quot;tab1-div&quot; class=&quot;archive&quot; style=&quot;display: block&quot;&gt;</span><br><span class="line">    &lt;ul class=&quot;post-archive&quot;&gt;</span><br><span class="line">        &lt;% var last; %&gt;  </span><br><span class="line">        &lt;% page.posts.each(function (post) &#123; %&gt;</span><br><span class="line">            &lt;% var year = post.date.year(); %&gt;</span><br><span class="line">            &lt;% if (last != year)&#123; %&gt;</span><br><span class="line">                &lt;% last = year; %&gt;</span><br><span class="line">                &lt;h2 class=&quot;archive-main-category&quot;&gt;&lt;%= year %&gt;&lt;/h2&gt;</span><br><span class="line">            &lt;% &#125; %&gt;</span><br><span class="line">                &lt;div class=&quot;post-item&quot;&gt;</span><br><span class="line">                    &lt;div class=&quot;post-info&quot;&gt;&lt;%= date(post.date, &quot;YYYY-MM-DD&quot;) %&gt;&lt;/div&gt;</span><br><span class="line">                    &lt;a href=&quot;&lt;%- url_for(post.path) %&gt;&quot; class=&quot;post-title-link&quot; target=&quot;_blank&quot;&gt;&lt;%= post.title %&gt;&lt;/a&gt;</span><br><span class="line">                &lt;/div&gt;</span><br><span class="line">        &lt;% &#125;) %&gt;</span><br><span class="line">    &lt;/ul&gt;</span><br><span class="line">&lt;/div&gt;</span><br></pre></td></tr></table></figure>
+
+<p>这个模板就很简单了，无非就是“&lt;% %&gt;”夹着一些js代码而已，而且里面的js代码很多是调用的 Hexo 的 API，而且和 html 结合之后，看起来更直观更简单。并且 Hexo 的官方文档上对 API 的介绍示例也是使用的 ejs 模板引擎的写法。</p>
+<p>不过让我坚持使用 ejs 模板的都不是之前说的那些原因。最重要的原因是这个：如果我想魔改或者模仿一个现成的主题或者网页来写主题，怎么样才能最快的达到别人的效果呢？很简单，在谷歌浏览器打开这个网站，然后按 F12 查看 html 源码，照着它的源码来写 ejs 模板，然后用到的 css 也一并拿过来（需要使用 js 的地方不多不做过多阐述），这样的话就可是很快的模仿别人的网站来写自己的主题，毕竟 ejs 模板其实也就是 js + html 而已，用 js 的逻辑和 Hexo API 来生成html。</p>
+<p>从我魔改 <a href="https://github.com/pinggod/hexo-theme-apollo" target="_blank" rel="noopener">hexo-theme-apollo</a> 主题然后写出自己的 <a href="https://github.com/umatobu/hexo-theme-umatobu" target="_blank" rel="noopener">hexo-theme-umatobu</a> 主题的时候我遇到了很大的困惑，其他地方都好魔改，唯有一处非常难处理，就是在 archive 页面来按照文章分类来生成列表，我通过查 Hexo 文档（注意是英文文档发现是可以添加多级分类的，中文稳定很久没有更新），且 post.categories API 是可以拿到对应文章的分类信息的，不过这个 API 返回的是 Object，需要自己根据内部数据来自定义操作。因为 ejs 不支持 JSON 函数，这里我利用大量的 typeof() 和 Object.keys() 方法来分析这个 Object 的数据结构，大致是这样的:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">post.categories(Object)</span><br><span class="line"></span><br><span class="line">|-- Object</span><br><span class="line">    |-- data(Object)</span><br><span class="line">        |-- 0(Object)</span><br><span class="line">            |-- name</span><br><span class="line">            |-- _id</span><br><span class="line">            |-- slug</span><br><span class="line">            |-- path</span><br><span class="line">            |-- permalink</span><br><span class="line">            |-- posts</span><br><span class="line">            |-- length</span><br><span class="line"></span><br><span class="line">        |-- 1(Object)</span><br><span class="line">            ...</span><br><span class="line"></span><br><span class="line">        ...</span><br><span class="line"></span><br><span class="line">    |-- length(number)</span><br></pre></td></tr></table></figure>
+
+<p>不管你以以下这两种写分类的方式的任意一种来写文章分类，上面的这个结构都是在 data 下面在 +1</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">categories:</span><br><span class="line">- [main_category, minor_category]</span><br><span class="line">- ...</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">categories:</span><br><span class="line">- category1</span><br><span class="line">- category2</span><br><span class="line">- ...</span><br></pre></td></tr></table></figure>
+
+<p>所以这里我为了能把我的 <a href="https://github.com/umatobu/hexo-theme-umatobu" target="_blank" rel="noopener">hexo-theme-umatobu</a> 主题的归档页面加上按照分类信息来分类的功能，我这里所有的文章必须加上一下分类信息：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">categories:</span><br><span class="line">- [main_category, minor_category]</span><br></pre></td></tr></table></figure>
+
+<p>我先遍历所有的文章把分类结构拿出来，然后再次遍历所有文章把是这个分类的文章贴在这个分类下方（注意我这个写法只支持二级分类，更多层级的不支持）。我在 archive.ejs 这样来提取分类数据和归类：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br></pre></td><td class="code"><pre><span class="line">&lt;div id=&quot;tab2-div&quot; class=&quot;archive&quot;&gt;</span><br><span class="line">    &lt;ul class=&quot;post-archive&quot;&gt;</span><br><span class="line">        &lt;% var category_obj = new Object(); %&gt; </span><br><span class="line">        &lt;% page.posts.each(function (post) &#123; %&gt;</span><br><span class="line">            &lt;% var one_post_category_obj = new Object(); %&gt; </span><br><span class="line">            &lt;% for(var i = (post.categories.length-1); i &gt;= 0; i--) &#123; %&gt;</span><br><span class="line">                &lt;% if( i == 0) &#123; %&gt;</span><br><span class="line">                    &lt;% category_obj[post.categories[&apos;data&apos;][i][&apos;name&apos;]] = one_post_category_obj; %&gt;</span><br><span class="line">                &lt;% &#125; else &#123; %&gt;</span><br><span class="line">                    &lt;% var temp_obj = one_post_category_obj; %&gt;</span><br><span class="line">                    &lt;% temp_obj[post.categories[&apos;data&apos;][i][&apos;name&apos;]] = temp_obj; %&gt;</span><br><span class="line">                    &lt;% one_post_category_obj = temp_obj;  %&gt;</span><br><span class="line">                &lt;% &#125; %&gt;</span><br><span class="line">            &lt;% &#125; %&gt;</span><br><span class="line">        &lt;% &#125;) %&gt;</span><br><span class="line"></span><br><span class="line">        &lt;% var category_keys = Object.keys(category_obj); %&gt;</span><br><span class="line">        &lt;% for(var i in category_keys) &#123; %&gt;</span><br><span class="line">            &lt;h2 class=&quot;archive-main-category&quot;&gt;&lt;%= category_keys[i] %&gt;&lt;/h2&gt;</span><br><span class="line">            &lt;% var category_keys_temp = Object.keys(category_obj[category_keys[i]]); %&gt;</span><br><span class="line">            &lt;% for(var j in category_keys_temp) &#123; %&gt;</span><br><span class="line">                &lt;div class=&quot;subtitle-item&quot;&gt;</span><br><span class="line">                    &lt;label&gt;&lt;%= category_keys_temp[j] %&gt;&lt;/label&gt;</span><br><span class="line">                &lt;/div&gt;</span><br><span class="line">            &lt;% &#125; %&gt;</span><br><span class="line">            &lt;% page.posts.each(function (post) &#123; %&gt;</span><br><span class="line">                &lt;% if(post.categories.length == 0) &#123; %&gt;</span><br><span class="line">                &lt;% &#125; else if(post.categories.length == 1) &#123; %&gt;</span><br><span class="line">                    &lt;% if(post.categories[&apos;data&apos;][0][&apos;name&apos;] == category_keys[i]) &#123; %&gt;</span><br><span class="line">                        &lt;div class=&quot;post-item&quot;&gt;</span><br><span class="line">                            &lt;div class=&quot;post-info&quot;&gt;&lt;%= date(post.date, &quot;YYYY-MM-DD&quot;) %&gt;&lt;/div&gt;</span><br><span class="line">                            &lt;a href=&quot;&lt;%- url_for(post.path) %&gt;&quot; class=&quot;post-title-link&quot; target=&quot;_blank&quot;&gt;&lt;%= post.title %&gt;&lt;/a&gt;</span><br><span class="line">                        &lt;/div&gt;</span><br><span class="line">                    &lt;% &#125; %&gt;</span><br><span class="line">                &lt;% &#125; else &#123; %&gt;</span><br><span class="line">                    &lt;% if(post.categories[&apos;data&apos;][0][&apos;name&apos;] == category_keys[i] &amp;&amp; post.categories[&apos;data&apos;][1][&apos;name&apos;] == Object.keys(category_obj[category_keys[i]])[0]) &#123; %&gt;</span><br><span class="line">                        &lt;div class=&quot;post-item&quot;&gt;</span><br><span class="line">                            &lt;div class=&quot;post-info&quot;&gt;&lt;%= date(post.date, &quot;YYYY-MM-DD&quot;) %&gt;&lt;/div&gt;</span><br><span class="line">                            &lt;a href=&quot;&lt;%- url_for(post.path) %&gt;&quot; class=&quot;post-title-link&quot; target=&quot;_blank&quot;&gt;&lt;%= post.title %&gt;&lt;/a&gt;</span><br><span class="line">                        &lt;/div&gt;</span><br><span class="line">                    &lt;% &#125; %&gt;</span><br><span class="line">                &lt;% &#125; %&gt;</span><br><span class="line">            &lt;% &#125;) %&gt;</span><br><span class="line">            &lt;div class=&quot;post-item&quot;&gt;</span><br><span class="line">            &lt;/div&gt;</span><br><span class="line">        &lt;% &#125; %&gt;</span><br><span class="line">    &lt;/ul&gt;</span><br><span class="line">&lt;/div&gt;</span><br></pre></td></tr></table></figure>
+      </div>
+    </article>
+  </div>
+</main>
+      <footer>
+  <div class="paginator"></div>
+  <div class="copyright">
+    <p>email: umatobu@163.com</p>
+    <p>© 2018 - 2019 <a href="https://github.com/umatobu" target="_blank">umatobu</a>, powered by <a href="https://hexo.io/" target="_blank">Hexo</a> and <a href="https://github.com/umatobu/hexo-theme-umatobu" target="_blank">hexo-theme-umatobu</a>.</p>
+  </div>
+</footer>
+    </div>
+  </body>
+</html>
