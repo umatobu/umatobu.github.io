@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html>
+  <head><meta name="generator" content="Hexo 3.9.0">
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    
+    <meta name="Subtitle" content="sharing, open source, interesting">
+    <meta name="Description" content="record the history of the academic qualifications, the interesting things and the sentiments of life">
+    <meta name="Keywords" content="c++,Qt,opengl,opencv">
+    <meta name="Author" content="umatobu">
+
+    <title>umatobu&#39;s blog</title>
+    <link rel="icon" type="image/png" href="/icon/favicon.png" sizes="32x32">
+    <link rel="stylesheet" href="/css/style.css">
+    <script src="/scripts/tabswitch.js"></script>
+</head>
+  <body>
+    <div class="wrap">
+      <header>
+  <a href="/" class="logo-link"><img src="/icon/header_logo.png" alt="icon"></a>
+  <ul class="nav nav-list">
+    
+      <li class="nav-list-item">
+        <a href="/" target="_self" class="nav-list-link ">HOME</a>
+      </li>
+    
+      <li class="nav-list-item">
+        <a href="/archives" target="_self" class="nav-list-link ">ARCHIVES</a>
+      </li>
+    
+      <li class="nav-list-item">
+        <a href="/aboutme" target="_self" class="nav-list-link ">ABOUTME</a>
+      </li>
+    
+  </ul>
+</header>
+      <main class="container">
+
+  
+  
+
+  
+  
+
+  
+  
+
+
+  <div class="post">
+    <article class="post-block">
+      <h1 class="post-title">Qt5搭建FFmpeg开发环境</h1>
+      <div class="post-info">2018-07-16</div>
+      <div class="post-content">
+        <p>　　所谓视频，你可以简单这样理解：其实就是将一张一张的图片连续的放出来，就像放幻灯片一样，由于人眼的惰性，因此只要图片的数量足够多，就会觉得是连续的动作。 所以，只需要将一张一张的图片保存下来，这样就可以构成一个视频了。那么怎么将视频的每一张图片取出来呢？这里就需要 FFmpeg 库来解码视频。然后将每一帧图片发送给 Qt 界面来渲染成播放视频的样子。</p>
+<a id="more"></a>
+
+<div class="tip">
+本系列环境版本：windows7 64bit，FFmpeg3.4.2，Qt5.9.5，编译器为MSVC2015_32和MingW53_32（Qt5.9.5自带），我会分别在两种编译器下编译通过。以后除例外不再特别说明。
+</div>
+
+<h3 id="FFmpeg下载"><a href="#FFmpeg下载" class="headerlink" title="FFmpeg下载"></a>FFmpeg下载</h3><p>在 <a href="http://ffmpeg.org/" target="_blank" rel="noopener">FFmpeg 官网</a> 下载 FFmpeg3.4.2 的 Windows 32-bit 的 Shared 包和 Dev 包。将 Shared 下的所有 dll 文件放置在最终 Qt 项目编译的二进制 exe 目录下，把 Dev 包下面的 lib 文件夹内的所有 .lib 文件放置在项目根目录的 /sdk/FFmpeg/lib 文件夹下用来最终的外部库链接，当然这个目录你可以随便指定，把 Dev 包下面的 include 文件夹拷贝到 /sdk/FFmpeg 目录下。为了项目文件的有序和易于管理，我建议最终的项目目录为以下的格式：</p>
+<p><img src="../../../../rec/2.png" alt="项目目录"></p>
+<h3 id="Qt链接FFmpeg库"><a href="#Qt链接FFmpeg库" class="headerlink" title="Qt链接FFmpeg库"></a>Qt链接FFmpeg库</h3><p>在 pro 文件内加上这段：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">win32 &#123;</span><br><span class="line">LIBS += -L$$PWD/../sdk/FFmpeg/lib/ -lavcodec</span><br><span class="line">LIBS += -L$$PWD/../sdk/FFmpeg/lib/ -lavdevice</span><br><span class="line">LIBS += -L$$PWD/../sdk/FFmpeg/lib/ -lavfilter</span><br><span class="line">LIBS += -L$$PWD/../sdk/FFmpeg/lib/ -lavformat</span><br><span class="line">LIBS += -L$$PWD/../sdk/FFmpeg/lib/ -lavutil</span><br><span class="line">LIBS += -L$$PWD/../sdk/FFmpeg/lib/ -lpostproc</span><br><span class="line">LIBS += -L$$PWD/../sdk/FFmpeg/lib/ -lswresample</span><br><span class="line">LIBS += -L$$PWD/../sdk/FFmpeg/lib/ -lswscale</span><br><span class="line"></span><br><span class="line">INCLUDEPATH += $$PWD/../sdk/FFmpeg/include</span><br><span class="line">DEPENDPATH += $$PWD/../sdk/FFmpeg/include</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>因为FFmpeg是 C 语言写的，所以在 C++ 中调用要加上 extern “C”。在要调用的头文件或者实现文件里面这样去包含 FFmpeg 头文件</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">extern &quot;C&quot;</span><br><span class="line">&#123;</span><br><span class="line">    #include &quot;libavcodec/avcodec.h&quot;</span><br><span class="line">    #include &quot;libavformat/avformat.h&quot;</span><br><span class="line">    #include &quot;libavutil/pixfmt.h&quot;</span><br><span class="line">    #include &quot;libswscale/swscale.h&quot;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>最后你可以这样测试一下 FFmpeg 到底有没有链接成功。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">unsigned version = avcodec_version(); </span><br><span class="line">qDebug() &lt;&lt; &quot;version is:&quot; &lt;&lt; version;</span><br></pre></td></tr></table></figure>
+
+<h3 id="其他"><a href="#其他" class="headerlink" title="其他"></a>其他</h3><p>另外视频也不仅仅只是图像的显示，还有音频流和字幕。这两个东西暂时还没有涉及，随后涉及到之后再来续此篇博客的命。</p>
+
+      </div>
+    </article>
+  </div>
+</main>
+      <footer>
+  <div class="paginator"></div>
+  <div class="copyright">
+    <p>email: umatobu@163.com</p>
+    <p>© 2018 - 2019 <a href="https://github.com/umatobu" target="_blank">umatobu</a>, powered by <a href="https://hexo.io/" target="_blank">Hexo</a> and <a href="https://github.com/umatobu/hexo-theme-umatobu" target="_blank">hexo-theme-umatobu</a>.</p>
+  </div>
+</footer>
+    </div>
+  </body>
+</html>

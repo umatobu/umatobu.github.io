@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html>
+  <head><meta name="generator" content="Hexo 3.9.0">
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    
+    <meta name="Subtitle" content="sharing, open source, interesting">
+    <meta name="Description" content="record the history of the academic qualifications, the interesting things and the sentiments of life">
+    <meta name="Keywords" content="c++,Qt,opengl,opencv">
+    <meta name="Author" content="umatobu">
+
+    <title>umatobu&#39;s blog</title>
+    <link rel="icon" type="image/png" href="/icon/favicon.png" sizes="32x32">
+    <link rel="stylesheet" href="/css/style.css">
+    <script src="/scripts/tabswitch.js"></script>
+</head>
+  <body>
+    <div class="wrap">
+      <header>
+  <a href="/" class="logo-link"><img src="/icon/header_logo.png" alt="icon"></a>
+  <ul class="nav nav-list">
+    
+      <li class="nav-list-item">
+        <a href="/" target="_self" class="nav-list-link ">HOME</a>
+      </li>
+    
+      <li class="nav-list-item">
+        <a href="/archives" target="_self" class="nav-list-link ">ARCHIVES</a>
+      </li>
+    
+      <li class="nav-list-item">
+        <a href="/aboutme" target="_self" class="nav-list-link ">ABOUTME</a>
+      </li>
+    
+  </ul>
+</header>
+      <main class="container">
+
+  
+  
+
+  
+  
+
+  
+  
+
+
+  <div class="post">
+    <article class="post-block">
+      <h1 class="post-title">第一个窗口</h1>
+      <div class="post-info">2018-08-16</div>
+      <div class="post-content">
+        <p>　　本视频是《音视频编程》的一条支线。怎么回事呢？因为视频由三个部分组成：图像、音频和字幕。图像需要一个介质来显示。现在是开始学习Qt的好时机，因为很多OpenGL功能在Qt框架内不断发展。其中一个新的事情是QOpenGL··类的添加（QGL··类的替代品）。我这里的介质选择的是Qt的QOpenGLWidget，这里的原因不再展开来讲。本系列不局限于音视频的应用，如果对opengl和Qt封装的OpenGL api感兴趣，倒是可以一观。</p>
+<a id="more"></a>
+
+<div class="tip">
+Qt使用的是5.9.5版本，编译器为MSVC2015_32和MingW53_32（Qt5.9.5自带），我会分别在两种编译器下编译通过。以后除例外不再特别说。本系列会刻意的不使用类似freeglut、glfw、glew、glad等等第三方gl工具或者库，这样做的目的我暂时是这么考虑的：如果尽可能的少依赖其他库或工具，尽量只用OpenGL和Qt封装的GL api，这样会容易编译在其他平台，不过带来的问题是，依赖Qt的紧密度会增强甚至不可或缺。和以往一样，我这里假设你Qt/C++的水平起码是个基础，如果了解OpenGL api将更好的帮助你阅读本系列。
+</div>
+
+<p>###前言</p>
+<p>为了方便起见，我会选择将 QOpenGLWidget 和 QOpenGLFunctions 一块继承。在Qt的目前版本中，不再需要glew等一些列其他第三方gl工具或库，并且 QOpenGLFunctions 默认为允许访问 OpenGL ES 2.0 API 结构。如果你不想通过继承子类来访问 QOpenGLFunctions 的功能，你可以通过QOpenGLContext获取可用的函数。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">QOpenGLFunctions functions(QOpenGLContext::currentContext());</span><br><span class="line">functions.glFunctionHere();</span><br><span class="line">// or...</span><br><span class="line">QOpenGLFunctions *functions = QOpenGLContext::currentContext()-&gt;functions();</span><br><span class="line">functions-&gt;glFunctionHere();</span><br></pre></td></tr></table></figure>
+
+<p>QOpenGLFunctions 默认为 OpenGL ES 2.0的原因是出于兼容性原因，所以我们可以轻松地将产品移植到嵌入式平台（如Android和iOS）。我们的例子将使用这个函数上下文，但我们也可以要求特定的函数上下文（例如QOpenGLFunctions_4_3_Core）。除了OpenGL ES 2.0 API之外，我们没有任何需求，所以我将坚持使用QOpenGLFunctions 类。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">class HsOpenGLWidget : public QOpenGLWidget, protected QOpenGLFunctions</span><br><span class="line">&#123;</span><br><span class="line">    Q_OBJECT</span><br><span class="line">public:</span><br><span class="line">    explicit HsOpenGLWidget(QWidget* parent = nullptr);</span><br><span class="line"></span><br><span class="line">protected:</span><br><span class="line">    void initializeGL();</span><br><span class="line">    void paintGL();</span><br><span class="line">    void resizeGL(int w, int h);</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+
+<p>###创建窗口</p>
+<p>我们只需要创建我们的类继承自 QOpenGLWidget 和 QOpenGLFunctions，并且重写以下三个虚函数。顾名思义，这三个函数分别起到OpenGL上下文执行初始化、绘制和检测窗体大小变化的功能。接下来我们试着实现这三个函数。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line">void HsOpenGLWidget::initializeGL()</span><br><span class="line">&#123;</span><br><span class="line">    // 初始化当前上下文的OpenGL函数</span><br><span class="line">    initializeOpenGLFunctions();</span><br><span class="line"></span><br><span class="line">    // glClearColor函数是一个状态设置函数</span><br><span class="line">    // 设置 glClear 的时候的颜色值，本身不会进行任何 clear 操作</span><br><span class="line">    // 指定刷新颜色缓冲区时所用的颜色</span><br><span class="line">    // 作用是，防止缓冲区中原有的颜色信息影响本次绘图</span><br><span class="line">    glClearColor(0.0f, 0.0f, 1.0f, 1.0f);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">void HsOpenGLWidget::paintGL()</span><br><span class="line">&#123;</span><br><span class="line">    // glClear函数则是一个状态应用的函数</span><br><span class="line">    // 清除颜色缓冲区</span><br><span class="line">    glClear(GL_COLOR_BUFFER_BIT);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">void HsOpenGLWidget::resizeGL(int w, int h)</span><br><span class="line">&#123;</span><br><span class="line">    //OpenGL幕后使用glViewport中定义的位置和宽高进行2D坐标的转换，将OpenGL中的位置坐标转换为你的屏幕坐标。</span><br><span class="line">    //例如，OpenGL中的坐标(-0.5, 0.5)有可能（最终）被映射为屏幕中的坐标(200,450)。</span><br><span class="line">    //注意，处理过的OpenGL坐标范围只为-1到1，因此我们事实上将(-1到1)范围内的坐标映射到(0, 800)和(0, 600)。</span><br><span class="line">    glViewport(0, 0, w, h);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>###后话</p>
+<p>如果你想知道你的上下文使用的opengl是什么版本的话，你可以使用以下代码（本文代码由于过于简单，这里不再进行太多解释）。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line">    //print Context Information</span><br><span class="line">    QString glType;</span><br><span class="line">    QString glVersion;</span><br><span class="line">    QString glProfile;</span><br><span class="line"></span><br><span class="line">    // Get Version Information</span><br><span class="line">    glType = (context()-&gt;isOpenGLES()) ? &quot;OpenGL ES&quot; : &quot;OpenGL&quot;;</span><br><span class="line">    glVersion = reinterpret_cast&lt;const char*&gt;(glGetString(GL_VERSION));</span><br><span class="line"></span><br><span class="line">    // Get Profile Information</span><br><span class="line">#define CASE(c) case QSurfaceFormat::c: glProfile = #c; break</span><br><span class="line">    switch (format().profile())</span><br><span class="line">    &#123;</span><br><span class="line">    CASE(NoProfile);</span><br><span class="line">    CASE(CoreProfile);</span><br><span class="line">    CASE(CompatibilityProfile);</span><br><span class="line">    &#125;</span><br><span class="line">#undef CASE</span><br><span class="line"></span><br><span class="line">    // qPrintable() will print our QString w/o quotes around it.</span><br><span class="line">    qDebug() &lt;&lt; qPrintable(glType) &lt;&lt; qPrintable(glVersion) &lt;&lt; &quot;(&quot; &lt;&lt; qPrintable(glProfile) &lt;&lt; &quot;)&quot;;</span><br></pre></td></tr></table></figure>
+
+<p>我通过打印发现我这里输出 “OpenGL 4.4.0 - Build 20.19.15.4300 ( CompatibilityProfile )”，我通过编译(什么鬼？Qt的项目还能编译在安卓上？是的你没有看错，如果有兴趣请看我的这篇博客 <a href="https://hellomafei.github.io/2018/07/28/Qt5%E6%90%AD%E5%BB%BAAndroid%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83/" target="_blank" rel="noopener">Qt5搭建Android开发环境</a>)在我的小米5（Android 7.0）手机上发现，输出的是“OpenGL ES 2.0 bulid 1.3···”，从这里可以知道，Qt将openg api封装的更适宜跨平台。如果我想规定使用 OpenGL 3.3 的话，我们需要在构造函数里添加如下代码。如果不更换环境的话，这可能是我们唯一测试以上输出版本的途径了。不过我不这么写，我没有必须使用3.3或者其他特定版本的需求。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">QSurfaceFormat format;</span><br><span class="line">format.setRenderableType(QSurfaceFormat::OpenGL);</span><br><span class="line">format.setProfile(QSurfaceFormat::CoreProfile);</span><br><span class="line">format.setVersion(3,3);</span><br><span class="line">this-&gt;setFormat(format);</span><br></pre></td></tr></table></figure>
+      </div>
+    </article>
+  </div>
+</main>
+      <footer>
+  <div class="paginator"></div>
+  <div class="copyright">
+    <p>email: umatobu@163.com</p>
+    <p>© 2018 - 2019 <a href="https://github.com/umatobu" target="_blank">umatobu</a>, powered by <a href="https://hexo.io/" target="_blank">Hexo</a> and <a href="https://github.com/umatobu/hexo-theme-umatobu" target="_blank">hexo-theme-umatobu</a>.</p>
+  </div>
+</footer>
+    </div>
+  </body>
+</html>
