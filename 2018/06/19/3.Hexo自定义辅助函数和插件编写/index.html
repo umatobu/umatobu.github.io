@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html>
+  <head><meta name="generator" content="Hexo 3.9.0">
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    
+    <meta name="Subtitle" content="sharing, open source, interesting">
+    <meta name="Description" content="record the history of the academic qualifications, the interesting things and the sentiments of life">
+    <meta name="Keywords" content="c++,Qt,opengl,opencv">
+    <meta name="Author" content="umatobu">
+
+    <title>umatobu&#39;s blog</title>
+    <link rel="icon" type="image/png" href="/icon/favicon.png" sizes="32x32">
+    <link rel="stylesheet" href="/css/style.css">
+    <script src="/scripts/tabswitch.js"></script>
+</head>
+  <body>
+    <div class="wrap">
+      <header>
+  <a href="/" class="logo-link"><img src="/icon/header_logo.png" alt="icon"></a>
+  <ul class="nav nav-list">
+    
+      <li class="nav-list-item">
+        <a href="/" target="_self" class="nav-list-link ">HOME</a>
+      </li>
+    
+      <li class="nav-list-item">
+        <a href="/archives" target="_self" class="nav-list-link ">ARCHIVES</a>
+      </li>
+    
+      <li class="nav-list-item">
+        <a href="/aboutme" target="_self" class="nav-list-link ">ABOUTME</a>
+      </li>
+    
+  </ul>
+</header>
+      <main class="container">
+
+  
+  
+
+  
+  
+
+  
+  
+
+
+  <div class="post">
+    <article class="post-block">
+      <h1 class="post-title">Hexo自定义辅助函数和插件编写</h1>
+      <div class="post-info">2018-06-19</div>
+      <div class="post-content">
+        <p>　　接上篇，由于技术有限，上篇做了分类归档页面有严重的 BUG，经过很久的分析也没解决这个问题。经过大量的查找资料和官方文档，甚至还读了 Hexo 的源码，发现到 Hexo 自带的 list_categories 辅助函数也许能解决我的问题。遂开此篇通过编写插件注册一个自定义辅助函数，最终也随愿解决了这个问题。</p>
+<a id="more"></a>
+
+<div class="tip">
+本文不贴整套的源码，只粗略的贴局部代码解决这个问题，不过贴出的源码已经是解决这个问题的全部代码。认真读文章！
+</div>
+
+<h3 id="自定义插件"><a href="#自定义插件" class="headerlink" title="自定义插件"></a>自定义插件</h3><p>很多人不理解为什么要有插件，因为我们已经被浏览器的插件烦透了对吗？ 没错。不受控的插件只会把用户搞疯狂，但是受控的插件，可以锦上添花。插件存在的意义是，一定要解决用户痛点。本节实例只会打印一句log，很显然没人会用这个插件。</p>
+<h4 id="新建package-json文件"><a href="#新建package-json文件" class="headerlink" title="新建package.json文件"></a>新建package.json文件</h4><p>在你的hexo blog目录，找到node_modules. 新建一个文件夹。然后执行npm init<br>npm会引导你生成package.json 这是你的包的描述文件。需要注意的是，所有的hexo插件必须以hexo-开头，否则hexo不会加载。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">npm install hexo-cli -g</span><br><span class="line">hexo init blog</span><br><span class="line">cd blog </span><br><span class="line">npm install //这4步如果已有无需再敲</span><br><span class="line"></span><br><span class="line">cd node_modules</span><br><span class="line">mkdir hexo-umatobu-category //名字你随意定义，必须 hexo- 开头</span><br><span class="line">cd hexo-umatobu-category</span><br><span class="line">npm init</span><br></pre></td></tr></table></figure>
+
+<p>根据提示输入信息：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">$ npm init</span><br><span class="line">...</span><br><span class="line">package name: (hexo-umatobu-category) hexo-umatobu-category</span><br><span class="line">version: (1.0.0) 0.0.1</span><br><span class="line">description: A detailed list of categories of hexo</span><br><span class="line">entry point: (index.js)</span><br><span class="line">test command:</span><br><span class="line">git repository:</span><br><span class="line">keywords: hexo umatobu category</span><br><span class="line">author: umatobu</span><br><span class="line">license: (ISC) MIT</span><br><span class="line"></span><br><span class="line">Is this OK? (yes)</span><br></pre></td></tr></table></figure>
+
+<p>回车然后package.json 就生成好了。</p>
+<h4 id="新建index-js文件"><a href="#新建index-js文件" class="headerlink" title="新建index.js文件"></a>新建index.js文件</h4><p>根据上面的package.json, 我们设置了入口JS文件名，因此必须新建一个index.js，这个包才完整。<br>我们根据hexo文档,注册插件，这个插件会在hexo 生成静态文件时，打印一条log.</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">hexo.extend.filter.register(&apos;before_generate&apos;, function()&#123;</span><br><span class="line">  console.log(&quot;111111111111111111111111&quot;);</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+
+<h4 id="测试"><a href="#测试" class="headerlink" title="测试"></a>测试</h4><p>回到上级目录，修改hexo的 package.json,新增一行到dependency：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&quot;hexo-umatobu-category&quot;: &quot;^0.0.1&quot;</span><br></pre></td></tr></table></figure>
+
+<p>然后，每次执行hexo g或者hexo s, 都会看到插件的log， 证明插件已经运行了。</p>
+<h3 id="辅助函数"><a href="#辅助函数" class="headerlink" title="辅助函数"></a>辅助函数</h3><p>通过查询 Hexo 文档我们发现辅助函数中有个 list_categories 可以制作分类列表，但是这个不符合我想要的效果（我想要必须两级分类，且分类下面有对应的文章列表）。通过上篇教程我们进行了很多的尝试结果都不能达到预期效果，怎么办呢？我想到了一个方法，既然 list_categories 的列表是可以展示全部的列表（多级不会丢失分类），那么我们为什么不去看看 list_categories 的源码去定制一个自己的 list_categories 呢？</p>
+<p>首先我们找到 Hexo 在 GitHub 托管的<a href="https://github.com/hexojs/hexo" target="_blank" rel="noopener">源码地址</a>，我在 lib/plugins/helper/ 目录下找到了 list_categories.js 文件，通过略读我发现这个就是 list_categories 辅助函数的源码。</p>
+<p>经过上节的学习我们已经知道了怎么编写插件，那么我们把上节的 index.js 文件内容改为这样：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">hexo.extend.helper.register(&apos;my_list_categories&apos;, function(categories)&#123;</span><br><span class="line">  return `&lt;h1&gt;Hello World!&lt;/h1&gt;`;</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+
+<p>然后将 archive.ejs 里面使用的 list_categories 辅助函数 替换为 my_list_categories，再次开启服务，转到归档页面，你会惊奇的发现竟然出现了一个内容为 “Hello World!” 的 </p><h1> 标签~<p></p>
+<p>那么接下来，我通过慢慢钻研 Hexo 的 list_categories 源码，写出这样一个自定义的辅助函数：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br></pre></td><td class="code"><pre><span class="line">hexo.extend.helper.register(&apos;my_list_categories&apos;, function(categories)&#123;</span><br><span class="line">    </span><br><span class="line">  if (!categories || !categories.length) return &apos;&apos;;</span><br><span class="line"></span><br><span class="line">  const prepareQuery = parent =&gt; &#123;</span><br><span class="line">    const query = &#123;&#125;;</span><br><span class="line"></span><br><span class="line">    if (parent) &#123;</span><br><span class="line">      query.parent = parent;</span><br><span class="line">    &#125; else &#123;</span><br><span class="line">      query.parent = &#123;$exists: false&#125;;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    return categories.find(query).sort(&apos;name&apos;, 1).filter(cat =&gt; cat.length);</span><br><span class="line">  &#125;;</span><br><span class="line"></span><br><span class="line">  const hierarchicalList = (level, parent) =&gt; &#123;</span><br><span class="line">    </span><br><span class="line">    if(level &gt; 1) return &apos;&apos;;</span><br><span class="line">    let result = &apos;&apos;;</span><br><span class="line"></span><br><span class="line">    prepareQuery(parent).forEach((cat, i) =&gt; &#123;</span><br><span class="line"></span><br><span class="line">      let child;</span><br><span class="line">      child = hierarchicalList(level + 1, cat._id);</span><br><span class="line"></span><br><span class="line">      if (child) &#123;</span><br><span class="line">        result += `&lt;h2 class=&quot;archive-main-category&quot;&gt;$&#123;cat.name&#125;&lt;/h2&gt;`;</span><br><span class="line">      &#125; else &#123;</span><br><span class="line">        result += `&lt;div class=&quot;subtitle-item&quot;&gt;&lt;div class=&quot;subtitle-info&quot;&gt;$&#123;cat.name&#125;&lt;/div&gt;&lt;/div&gt;`;</span><br><span class="line"></span><br><span class="line">        //sort by date</span><br><span class="line">        var posts = &#123;&#125;;</span><br><span class="line">        for(var n = 0; n &lt; cat.posts.length; n++)</span><br><span class="line">        &#123;</span><br><span class="line">          var post1 = cat.posts.data[n];</span><br><span class="line">          var date1 = this.date(post1.date, &quot;YYYY-MM-DD hh:mm:ss&quot;) + post1.title;</span><br><span class="line">          posts[date1] = post1;</span><br><span class="line">        &#125;</span><br><span class="line">        function objKeySort(obj) &#123;</span><br><span class="line">          var newkey = Object.keys(obj).sort();</span><br><span class="line">          var newObj = &#123;&#125;;</span><br><span class="line">          for (var i = 0; i &lt; newkey.length; i++) &#123;</span><br><span class="line">              newObj[newkey[i]] = obj[newkey[i]];</span><br><span class="line">          &#125;</span><br><span class="line">          return newObj;</span><br><span class="line">        &#125;</span><br><span class="line">        posts = objKeySort(posts)</span><br><span class="line">        var posts_keys = Object.keys(posts);</span><br><span class="line"></span><br><span class="line">        for(var k = 0; k &lt; posts_keys.length; k++)</span><br><span class="line">        &#123;</span><br><span class="line">          var post2 = posts[posts_keys[k]];</span><br><span class="line">          result += `&lt;div class=&quot;post-item&quot;&gt;`;</span><br><span class="line">          result += `&lt;div class=&quot;post-info&quot;&gt;$&#123;this.date(post2.date, &quot;YYYY-MM-DD&quot;)&#125;&lt;/div&gt;`;</span><br><span class="line">          result += `&lt;a href=&quot;$&#123;this.url_for(post2.path)&#125;&quot; class=&quot;post-title-link&quot; target=&quot;_blank&quot;&gt;`;</span><br><span class="line">          result += `$&#123;post2.title&#125;&lt;/a&gt;&lt;/div&gt;`;</span><br><span class="line"></span><br><span class="line">          if(k == (cat.posts.length-1))</span><br><span class="line">          &#123;</span><br><span class="line">            result += `&lt;p&gt; &lt;/p&gt;`;</span><br><span class="line">          &#125;</span><br><span class="line">        &#125;</span><br><span class="line">      &#125;</span><br><span class="line"></span><br><span class="line">      if (child) &#123;</span><br><span class="line">        result += `$&#123;child&#125;`;</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;);</span><br><span class="line"></span><br><span class="line">    return result;</span><br><span class="line">  &#125;;</span><br><span class="line"></span><br><span class="line">  return `&lt;ul class=&quot;post-archive&quot;&gt;$&#123;hierarchicalList(0)&#125;&lt;/ul&gt;`;</span><br><span class="line"></span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+
+<h4 id="测试-1"><a href="#测试-1" class="headerlink" title="测试"></a>测试</h4><p><img src="../../../../rec/8.png" alt="分类归档展示图"></p>
+</h1>
+      </div>
+    </article>
+  </div>
+</main>
+      <footer>
+  <div class="paginator"></div>
+  <div class="copyright">
+    <p>email: umatobu@163.com</p>
+    <p>© 2018 - 2019 <a href="https://github.com/umatobu" target="_blank">umatobu</a>, powered by <a href="https://hexo.io/" target="_blank">Hexo</a> and <a href="https://github.com/umatobu/hexo-theme-umatobu" target="_blank">hexo-theme-umatobu</a>.</p>
+  </div>
+</footer>
+    </div>
+  </body>
+</html>

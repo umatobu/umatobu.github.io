@@ -440,6 +440,9 @@ nav.page-nav span.current {
   font-size: 1.2em;
 }
 .post-content h3 {
+  font-size: 1.1em;
+}
+.post-content h4 {
   font-size: 1em;
 }
 .post-content h4 a:before,
@@ -714,7 +717,7 @@ footer .copyright {
   margin: 4em 0;
   border-top: 1px solid #ddd;
   text-align: center;
-  line-height: 0.5em;
+  line-height: 1em;
 }
 footer .copyright p,
 footer .copyright a {
