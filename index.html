@@ -1,19 +1,24 @@
 <!DOCTYPE html>
 <html>
   <head><meta name="generator" content="Hexo 3.9.0">
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    
-    <meta name="Subtitle" content="sharing, open source, interesting">
-    <meta name="Description" content="record the history of the academic qualifications, the interesting things and the sentiments of life">
-    <meta name="Keywords" content="c++,Qt,opengl,opencv">
-    <meta name="Author" content="umatobu">
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  
+  <meta name="Subtitle" content="sharing, open source, interesting">
+  <meta name="Description" content="record the history of the academic qualifications, the interesting things and the sentiments of life">
+  <meta name="Keywords" content="c++,Qt,opengl,opencv">
+  <meta name="Author" content="umatobu">
 
-    <title>umatobu&#39;s blog</title>
-    <link rel="icon" type="image/png" href="/icon/favicon.png" sizes="32x32">
-    <link rel="stylesheet" href="/css/style.css">
-    <script src="/scripts/tabswitch.js"></script>
+  
+
+  <title>HOME | UMATOBU&#39;S BLOG</title>
+  <link rel="icon" type="image/png" href="/icon/favicon.png" sizes="32x32">
+  <link rel="stylesheet" href="/css/style.css">
+  <script src="/scripts/tabswitch.js"></script>
+  <link href="http://cdn.staticfile.org/emoji/0.2.2/emoji.css" rel="stylesheet" type="text/css">
+  <script src="http://cdn.staticfile.org/jquery/2.1.0/jquery.min.js"></script>
+  <script src="http://cdn.staticfile.org/emoji/0.2.2/emoji.js"></script>
 </head>
   <body>
     <div class="wrap">
@@ -84,6 +89,15 @@
 
   <li class="post-list-item">
     <article class="post-block">
+        <h2 class="post-title"><a href="/2018/07/12/Git常见场景的使用与代码提交规范/" class="post-title-link" target="_blank">Git常见场景的使用与代码提交规范</a></h2>
+        <div class="post-info">2018-07-12</div>
+        <div><p><p>　　Git教程那么多，但是如果你是个编程新手的话，即使看了很多帖子也不一定能正确使用 Git。站在新手的立场上来想，我不会用过于复杂的 Git 指令，只有在克隆或者推送代码等几种常见场景下才会用到，那么这些常见场景的命令都是什么样子的呢？看过来~</p></p></div>
+        <a href="/2018/07/12/Git常见场景的使用与代码提交规范/" class="read-more" target="_blank">...more</a>
+    </article>
+  </li>
+
+  <li class="post-list-item">
+    <article class="post-block">
         <h2 class="post-title"><a href="/2018/06/19/Hexo自定义辅助函数和插件编写/" class="post-title-link" target="_blank">Hexo自定义辅助函数和插件编写</a></h2>
         <div class="post-info">2018-06-19</div>
         <div><p><p>　　接上篇，由于技术有限，上篇做了分类归档页面有严重的 BUG，经过很久的分析也没解决这个问题。经过大量的查找资料和官方文档，甚至还读了 Hexo 的源码，发现到 Hexo 自带的 list_categories 辅助函数也许能解决我的问题。遂开此篇通过编写插件注册一个自定义辅助函数，最终也随愿解决了这个问题。</p></p></div>
@@ -119,5 +133,12 @@
   </div>
 </footer>
     </div>
+    <script>
+      $(function () {
+        var $text = $('.emojstext');
+        var html = $text.html().trim().replace(/\n/g, '<br/>');
+        $text.html(jEmoji.unifiedToHTML(html));
+      });
+    </script>
   </body>
 </html>
