@@ -353,6 +353,25 @@ header .nav-list-item a {
   border-top-left-radius: 4px;
   border-bottom-left-radius: 4px;
 }
+.aboutme {
+  text-align: center;
+}
+.aboutme .my-info-div {
+  line-height: 0.5em;
+}
+.aboutme .my-info-div p {
+  color: #000;
+}
+.aboutme .my-info-div .my-label,
+.aboutme .my-info-div a {
+  color: #666;
+}
+.aboutme .my-info-div a:hover {
+  color: #8cc7b5;
+}
+.aboutme img {
+  width: 8em;
+}
 nav.page-nav {
   display: block;
   text-align: center;
