@@ -357,10 +357,13 @@ header .nav-list-item a {
   text-align: center;
 }
 .aboutme .my-info-div {
-  line-height: 0.5em;
+  line-height: 1.4em;
+  margin-top: 15px;
 }
 .aboutme .my-info-div p {
   color: #000;
+  margin-top: 5px;
+  margin-bottom: 5px;
 }
 .aboutme .my-info-div .my-label,
 .aboutme .my-info-div a {
