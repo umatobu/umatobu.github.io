@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html>
+  <head><meta name="generator" content="Hexo 3.9.0">
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  
+  <meta name="Subtitle" content="sharing, open source, interesting">
+  <meta name="Description" content="record the history of the academic qualifications, the interesting things and the sentiments of life">
+  <meta name="Keywords" content="c++,Qt,opengl,opencv">
+  <meta name="Author" content="umatobu">
+
+  
+
+  <title>Qt开发的奇淫技巧 | UMATOBU&#39;S BLOG</title>
+  <link rel="icon" type="image/png" href="/icon/favicon.png" sizes="32x32">
+  <link rel="stylesheet" href="/css/style.css">
+  <script src="/scripts/tabswitch.js"></script>
+  <link href="http://cdn.staticfile.org/emoji/0.2.2/emoji.css" rel="stylesheet" type="text/css">
+  <script src="http://cdn.staticfile.org/jquery/2.1.0/jquery.min.js"></script>
+  <script src="http://cdn.staticfile.org/emoji/0.2.2/emoji.js"></script>
+</head>
+  <body>
+    <div class="wrap">
+      <header>
+  <a href="/" class="logo-link"><img src="/icon/header_logo.png" alt="icon"></a>
+  <ul class="nav nav-list">
+    
+      <li class="nav-list-item">
+        <a href="/" target="_self" class="nav-list-link ">HOME</a>
+      </li>
+    
+      <li class="nav-list-item">
+        <a href="/archives" target="_self" class="nav-list-link ">ARCHIVES</a>
+      </li>
+    
+      <li class="nav-list-item">
+        <a href="/aboutme" target="_self" class="nav-list-link ">ABOUTME</a>
+      </li>
+    
+  </ul>
+</header>
+      <main class="container">
+
+  
+  
+
+  
+  
+
+  
+  
+
+
+  <div class="post">
+    <article class="post-block">
+      <h1 class="post-title">Qt开发的奇淫技巧</h1>
+      <div class="post-info">2018-08-11</div>
+      <div class="post-content">
+        <p>　　平时的开发过程中，总能遇到一些比较偏门的问题，而且苦于网上不好找到相应的资料，特开此篇介绍一些偏门的 Qt 技巧和秘籍，仅此记录且希望能以后用到。</p>
+<a id="more"></a>
+
+<div class="tip">
+主要讲qt creator的一些技巧，msvc for qt不在本文探讨范围之内
+</div>
+
+<ol>
+<li>想要程序以管理员权限运行，首先启动 qt creator 要以管理员运行，并在 xxx.pro 文件中加入以下代码：<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">QMAKE_LFLAGS += /MANIFESTUAC:\&quot;level=\&apos;requireAdministrator\&apos; uiAccess=\&apos;false\&apos;\&quot;</span><br></pre></td></tr></table></figure></li>
+</ol>
+
+      </div>
+    </article>
+  </div>
+</main>
+      <footer>
+  <div class="paginator"></div>
+  <div class="copyright">
+    <p>email: <a href="mailto:umatobu@163.com" title="umatobu@163.com">umatobu@163.com</a></p>
+    <p>© 2018 - 2019 <a href="https://github.com/umatobu" target="_blank">umatobu</a>, powered by <a href="https://hexo.io/" target="_blank">Hexo</a> and <a href="https://github.com/umatobu/hexo-theme-umatobu" target="_blank">hexo-theme-umatobu</a>.</p>
+  </div>
+</footer>
+    </div>
+    <script>
+      $(function () {
+        var $text = $('.emojstext');
+        var html = $text.html().trim().replace(/\n/g, '<br/>');
+        $text.html(jEmoji.unifiedToHTML(html));
+      });
+    </script>
+  </body>
+</html>

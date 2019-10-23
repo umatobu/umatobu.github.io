@@ -734,6 +734,7 @@ main.container {
 }
 footer {
   padding-bottom: 1px;
+  margin: 2em 30px;
 }
 footer .copyright {
   margin: 4em 0;
